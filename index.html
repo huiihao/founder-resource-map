@@ -264,7 +264,7 @@ footer p+p{margin-top:6px}
       <div><dt>适用对象</dt><dd>技术背景创业者 / 研究者</dd></div>
       <div><dt>偏向</dt><dd>软件 / 硬件 / 制造</dd></div>
       <div><dt>阅读时间</dt><dd>30 分钟</dd></div>
-      <div><dt>资源数量</dt><dd>60+</dd></div>
+      <div><dt>资源数量</dt><dd>65+</dd></div>
     </dl>
   </div>
 </header>
@@ -861,9 +861,177 @@ footer p+p{margin-top:6px}
     </div>
   </section>
 
-  <section class="section" id="library">
+  <section class="section" id="games">
     <div class="sec-label">
       <span class="idx">TRACK 08</span>
+      <h2>游戏发行</h2>
+      <p>先走 Steam 国际版，再决定要不要回国做版号。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">游戏发行有两条主线：全球的 Steam，和国内的微信小游戏。前者通常不需要中国版号，适合第一款产品；后者有微信流量，但一碰内购就要版号。先把 Steam 国际版走通，再决定要不要为国内渠道投入 6–12 个月。</p>
+
+      <div class="note">
+        <b>第一站：Steam 国际版</b>
+        <p>$100/款，审核 1–5 天，商店页“即将推出”至少 2 周，首款产品付费后 30 天可发售。通常不需要中国版号，但税务、银行、商店页和营销是实打实的门槛。</p>
+        <p>“不需要版号”不等于可以无限制地面向国内运营。如果实质以国内用户为目标、在国内大规模宣发或收款，仍有合规风险；蒸汽平台（Steam 中国）明确需要版号。</p>
+      </div>
+
+      <h3 class="subhead">四条路线</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>路线</th><th>版号</th><th>主体</th><th>上线周期</th><th>主要成本</th><th>分成</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Steam 国际版</td><td>通常不需要</td><td>个人/公司</td><td>6–10 周</td><td>$100 + 美术/本地化</td><td>开发者 70%</td></tr>
+            <tr><td>蒸汽平台</td><td>必须</td><td>国内公司</td><td>6–12 个月+</td><td>版号 + 发行</td><td>国内渠道分成</td></tr>
+            <tr><td>微信小游戏 IAA</td><td>不需要，走备案</td><td>个人可</td><td>1–3 个月</td><td>开发 + 买量</td><td>基础约 50%</td></tr>
+            <tr><td>微信小游戏 IAP</td><td>必须</td><td>企业/个体户，版号通常要公司</td><td>6–12 个月+</td><td>版号 + 买量</td><td>安卓约 60%；iOS 苹果 15% + 微信分成</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subhead">Steam 国际版：8 周首发清单</h3>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>注册 Steamworks，付 $100</h3>
+            <p>签署数字协议，按产品支付 Steam Direct 费。费用不可退，该产品调整后总收入达到 $1,000 后返还。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>税务和银行</h3>
+            <p>个人填 W-8BEN，公司填 W-8BEN-E；姓名、地址、银行账户三者一致。身份和银行验证通常 15–30 天，别等到发售前才弄。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>做商店页素材</h3>
+            <p>胶囊图（含游戏名）、至少 5 张实机截图、预告片、短描述、长描述、标签、系统需求、隐私政策/EULA。用了 AI 素材必须如实披露。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>接 Steamworks SDK</h3>
+            <p>成就、云存档、排行榜、创意工坊、Steam Deck 支持；配置 depot、分支和启动参数。构建崩溃是审核被拒的常见原因。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>做 Demo 和 Playtest</h3>
+            <p>Demo 是愿望单转化的主力。准备 Steam Next Fest、主题节和主播试玩；Demo 要能在一小时内展示核心乐趣，不是完整游戏的缩水版。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>提审商店页和构建</h3>
+            <p>商店页和构建可以并行审核，通常 1–5 天。商店页必须以“即将推出”公开至少 2 周，首款产品付费后还要等 30 天。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>愿望单营销</h3>
+            <p>联系主播和媒体发 key，准备 press kit；做本地化（至少英文）；设置区域定价和首发折扣。Steam 算法看愿望单转化、评价和在线人数。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>发售和长线运营</h3>
+            <p>退款政策是 14 天内、游玩不足 2 小时。上线后持续修 bug、做更新和社区运营；评价和在线数据会直接影响后续曝光。</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subhead">Steam 的钱和税</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>项目</th><th>规则</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>分成</td><td>Valve 30%，开发者 70%；单款累计超 $1,000 万后超出部分 25%，超 $5,000 万后超出部分 20%</td></tr>
+            <tr><td>结算</td><td>按月，销售月份结束后约 30 天付款，当月满 $100 才结算</td></tr>
+            <tr><td>美国预扣税</td><td>默认 30%；中国开发者可申请税收协定待遇，常见降到 10%，以 IRS 和 Steamworks 最新说明为准</td></tr>
+            <tr><td>税务表</td><td>个人 W-8BEN，公司 W-8BEN-E；需要外国 TIN；信息通常 3 年有效，到期重新确认</td></tr>
+            <tr><td>收款</td><td>银行电汇或 WorldFirst 等；个人结汇有每年 5 万美元便利化额度；公司走对公账户更规范</td></tr>
+            <tr><td>退款</td><td>购买 14 天内、游玩不足 2 小时可退</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subhead">微信小游戏：IAA 还是 IAP</h3>
+      <div class="cards">
+        <article class="card">
+          <span class="src">门槛最低</span>
+          <h3>IAA：纯广告</h3>
+          <p>个人主体可做；软著 + 自审报告 + 小游戏备案 + 小程序备案。流量主需累计 UV > 500；基础广告分成开发者约 50%，广告金激励另算。适合先验证玩法。</p>
+        </article>
+        <article class="card">
+          <span class="src">内购</span>
+          <h3>IAP：首充/礼包/月卡</h3>
+          <p>必须版号；个人不能开虚拟支付；需要企业/个体户 + 微信认证 + 版号 + 软著 + 自审 + 防沉迷。安卓基础分成约 40% 平台、60% 开发者；iOS 从 2025 年 11 月起接入苹果 15% 抽成，微信再分成。</p>
+        </article>
+        <article class="card">
+          <span class="src">版号</span>
+          <h3>必须通过出版单位</h3>
+          <p>个人不能直接申请；由有《网络出版服务许可证》的出版单位申报。周期通常 6–12 个月；官方审批不收费，市场成本常见几万到十几万元。不要买版号、租版号。</p>
+        </article>
+        <article class="card">
+          <span class="src">合规</span>
+          <h3>防沉迷与实名</h3>
+          <p>接入中宣部实名认证系统；未成年人仅周五、周六、周日及法定节假日 20:00–21:00 可玩 1 小时；充值有限额。隐私政策、适龄提示、健康游戏忠告都要有。</p>
+        </article>
+      </div>
+
+      <h3 class="subhead">微信资质清单</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>资质</th><th>谁需要</th><th>周期</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>小程序账号 + 游戏类目</td><td>所有人</td><td>1 天</td><td>微信公众平台注册，拿 AppID</td></tr>
+            <tr><td>微信认证</td><td>企业/个体户（IAP 必须）</td><td>1–3 天</td><td>企业 300 元/年；个人做 IAA 可不认证</td></tr>
+            <tr><td>软著</td><td>所有人</td><td>30–60 个工作日</td><td>名称与游戏名一致；电子版权认证可用于部分平台上架，但不能申请版号</td></tr>
+            <tr><td>自审自查报告</td><td>所有人</td><td>1–3 天</td><td>平台模板，内容合规自查</td></tr>
+            <tr><td>适龄提示 + 隐私政策</td><td>所有人</td><td>1–3 天</td><td>首屏弹窗，列明收集字段</td></tr>
+            <tr><td>小程序备案（ICP）</td><td>所有人</td><td>1–4 周</td><td>2023-09-01 起强制，工信部备案</td></tr>
+            <tr><td>小游戏备案</td><td>IAA</td><td>10–37 个工作日</td><td>省级出版行政主管部门，平台通常自动申报</td></tr>
+            <tr><td>游戏版号（ISBN）</td><td>IAP</td><td>6–12 个月</td><td>通过出版单位申报；运营单位通常是公司</td></tr>
+            <tr><td>虚拟支付进件</td><td>IAP</td><td>1–3 个工作日</td><td>微信认证 + 版号 + 软著 + 自审报告</td></tr>
+            <tr><td>文网文/ICP 许可证</td><td>部分企业</td><td>1–6 个月</td><td>含文字剧情、运营单位要求时</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <b>首充的经济学</b>
+        <p>1 元首充扣掉平台费（微信/支付宝约 0.6%，Apple/Google/Steam 约 30%）和税后，几乎不赚钱；它的作用是破冰转化，6 元更常见。版号成本几万到十几万、周期半年以上，靠 1 元首充回本不现实。先验证留存和付费意愿，再决定是否投入版号。</p>
+      </div>
+
+      <div class="warn">
+        <b>最常见的问题</b>
+        <p>Steam：税务姓名、银行账户、Steamworks 名称不一致，付款被卡；胶囊图没游戏名、截图非实机、AI 素材未披露，商店页被拒。</p>
+        <p>微信：游戏名/软著/版号/账号主体不一致；个人主体做内购；没版号先上收费测试；防沉迷或隐私没接；iOS 支付政策变化快，按最新公告接。</p>
+        <p>两边都不要用个人收款码收商业流水，不要买/租版号，不要把“国际版不需要版号”当成国内合规的免死金牌。</p>
+      </div>
+
+      <div class="note">
+        <b>第一款游戏的建议</b>
+        <p>做一个核心机制、1–3 小时流程、能在一小时内展示乐趣的小体量游戏；定价 $4.99–$9.99，做 Demo，参加 Steam Next Fest。先学会发货、退款、评价和愿望单，再谈内购和首充。</p>
+      </div>
+
+      <div class="note">
+        <b>官方入口</b>
+        <p><a href="https://partner.steamgames.com/steamdirect?l=schinese" target="_blank" rel="noopener">Steam Direct</a> · <a href="https://partner.steamgames.com/doc/finance/taxfaq" target="_blank" rel="noopener">Steamworks 税务 FAQ</a> · <a href="https://partner.steamgames.com/doc/store" target="_blank" rel="noopener">Steamworks 商店页文档</a> · <a href="https://developers.weixin.qq.com/minigame/introduction/guide/zzsh-iap" target="_blank" rel="noopener">微信小游戏 IAP 资质审核</a> · <a href="https://developers.weixin.qq.com/minigame/introduction/commercialization/virtual-payment/" target="_blank" rel="noopener">微信虚拟支付进件</a> · <a href="https://developers.weixin.qq.com/minigame/introduction/guide/iaa.html" target="_blank" rel="noopener">微信 IAA 指引</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="library">
+    <div class="sec-label">
+      <span class="idx">TRACK 09</span>
       <h2>书、播客、社区</h2>
       <p>课程之外，建立长期的输入。</p>
     </div>
@@ -930,7 +1098,7 @@ footer p+p{margin-top:6px}
 
   <section class="section" id="plan">
     <div class="sec-label">
-      <span class="idx">TRACK 09</span>
+      <span class="idx">TRACK 10</span>
       <h2>90 天清单</h2>
       <p>勾选会保存在你自己的浏览器里。</p>
     </div>
