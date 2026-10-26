@@ -1,0 +1,801 @@
+<title>从实验室到量产</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* ============================================================
+   设计计划
+   色彩：冷纸白 + 墨绿 + 铁锈红，像一份工程说明书的批注
+   字体：Noto Serif SC（标题）/ Noto Sans SC（正文）/ IBM Plex Mono（标签与数字）
+   布局：单栏文档流 + 阶段路线条 + 双列资料卡；移动端全部堆叠
+   ============================================================ */
+:root{
+  --paper:#f4f5f1;
+  --surface:#ffffff;
+  --ink:#18211e;
+  --muted:#5b6963;
+  --line:#d7ddd5;
+  --line-strong:#b9c3ba;
+  --accent:#0e5a50;
+  --accent-soft:#dceae5;
+  --signal:#ad441d;
+  --signal-soft:#f5e2d9;
+  --code:#ecefe8;
+  --shadow:0 1px 0 rgba(24,33,30,.04);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f1513;
+    --surface:#161d1a;
+    --ink:#e8ece7;
+    --muted:#9aa8a1;
+    --line:#2a3530;
+    --line-strong:#3c4a43;
+    --accent:#6fc0b2;
+    --accent-soft:#1b2f2b;
+    --signal:#e58a62;
+    --signal-soft:#33211a;
+    --code:#1c2420;
+    --shadow:none;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f1513;
+  --surface:#161d1a;
+  --ink:#e8ece7;
+  --muted:#9aa8a1;
+  --line:#2a3530;
+  --line-strong:#3c4a43;
+  --accent:#6fc0b2;
+  --accent-soft:#1b2f2b;
+  --signal:#e58a62;
+  --signal-soft:#33211a;
+  --code:#1c2420;
+  --shadow:none;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.9;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3{font-family:"Noto Serif SC","Songti SC","SimSun",serif;text-wrap:balance;margin:0}
+p{margin:0}
+.wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.mono{font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- 页眉 ---------- */
+.hero{
+  border-bottom:1px solid var(--line-strong);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:40px 40px;
+  opacity:.45;
+  pointer-events:none;
+}
+.hero .wrap{position:relative;padding-block:clamp(40px,7vw,84px) clamp(32px,5vw,56px)}
+.docline{
+  display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  padding-bottom:18px;border-bottom:1px solid var(--line);
+}
+.docline b{color:var(--accent);font-weight:500}
+.hero h1{
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  line-height:1.12;
+  font-weight:700;
+  letter-spacing:.01em;
+  margin:clamp(26px,4vw,44px) 0 0;
+}
+.hero h1 span{color:var(--accent)}
+.lede{
+  max-width:38em;
+  margin-top:22px;
+  font-size:clamp(1rem,1.6vw,1.14rem);
+  line-height:1.95;
+  color:var(--muted);
+}
+.specs{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:1px;background:var(--line);
+  border:1px solid var(--line);
+  margin-top:clamp(30px,5vw,48px);
+}
+.specs div{background:var(--surface);padding:14px 16px}
+.specs dt{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.specs dd{margin:0;font-size:.95rem;line-height:1.5}
+
+/* ---------- 路线条 ---------- */
+.route{padding-block:28px 8px}
+.route-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.route-head p{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.route-head a{font-size:.82rem;border:0;color:var(--muted)}
+.stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:2px solid var(--ink)}
+.stage{
+  padding:14px 14px 18px 0;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:6px;min-width:0;
+}
+.stage:last-child{border-right:0;padding-right:0}
+.stage .n{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--accent);letter-spacing:.08em}
+.stage h2{font-family:"Noto Sans SC",sans-serif;font-size:1rem;font-weight:700;line-height:1.4}
+.stage p{font-size:.82rem;line-height:1.65;color:var(--muted)}
+.stage .t{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--muted)}
+
+/* ---------- 主体 ---------- */
+main{padding-block:clamp(40px,6vw,72px)}
+.section{display:grid;grid-template-columns:190px minmax(0,1fr);gap:clamp(24px,4vw,56px);padding-block:clamp(40px,6vw,64px);border-top:1px solid var(--line-strong)}
+.section:first-child{border-top:0;padding-top:0}
+.sec-label{position:sticky;top:24px;align-self:start}
+.sec-label .idx{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--accent);display:block;margin-bottom:8px}
+.sec-label h2{font-size:1.35rem;line-height:1.4}
+.sec-label p{font-size:.8rem;line-height:1.7;color:var(--muted);margin-top:8px}
+.sec-body{min-width:0}
+.sec-intro{font-size:1.02rem;line-height:1.95;max-width:44em;margin-bottom:28px}
+.sec-intro strong{font-weight:700}
+
+/* ---------- 资料卡 ---------- */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.card{background:var(--surface);padding:20px 20px 18px;display:flex;flex-direction:column;gap:9px;min-width:0;box-shadow:var(--shadow)}
+.card .src{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.card h3{font-size:1.04rem;line-height:1.5;font-weight:700}
+.card p{font-size:.87rem;line-height:1.78;color:var(--muted)}
+.card .link{margin-top:auto;padding-top:6px;font-size:.82rem;border:0}
+.card .link span{font-family:"IBM Plex Mono",monospace}
+.card:hover h3{color:var(--accent)}
+
+/* ---------- 提示框 ---------- */
+.note,.warn{
+  padding:18px 20px;margin:26px 0;border-left:3px solid var(--accent);
+  background:var(--accent-soft);font-size:.92rem;line-height:1.85;
+}
+.warn{border-left-color:var(--signal);background:var(--signal-soft)}
+.note b,.warn b{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.note b{color:var(--accent)}
+.warn b{color:var(--signal)}
+.note p+p,.warn p+p{margin-top:8px}
+
+/* ---------- 步骤 ---------- */
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.step{counter-increment:s;display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.step::before{
+  content:counter(s,decimal-leading-zero);
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--accent);
+  padding-top:4px;
+}
+.step h3{font-size:1rem;line-height:1.5;margin-bottom:6px}
+.step p,.step li{font-size:.88rem;line-height:1.8;color:var(--muted)}
+.step ul{margin:6px 0 0;padding-left:1.15em}
+.step li+li{margin-top:3px}
+.step code{background:var(--code);padding:1px 5px;font-size:.82em;font-family:"IBM Plex Mono",monospace}
+
+/* ---------- 表格 ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);margin-top:24px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.86rem;background:var(--surface)}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--code)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- 清单 ---------- */
+.checklist{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);margin-top:6px}
+.check-group{padding:16px 0 4px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:start;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check input{margin:5px 0 0;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.check span{font-size:.9rem;line-height:1.75}
+.check input:checked+span{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.progress{
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  margin-top:18px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);
+  font-size:.82rem;color:var(--muted);
+}
+.progress b{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-size:1rem;font-weight:500}
+
+/* ---------- 书单 ---------- */
+.booklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.booklist li{padding-bottom:12px;border-bottom:1px solid var(--line);min-width:0}
+.booklist b{display:block;font-size:.92rem;line-height:1.6}
+.booklist span{font-size:.8rem;color:var(--muted);line-height:1.65}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.04em;padding:4px 9px;border:1px solid var(--line-strong);color:var(--muted);white-space:nowrap}
+
+footer{border-top:1px solid var(--line-strong);padding-block:28px 44px;color:var(--muted);font-size:.78rem;line-height:1.8}
+footer p+p{margin-top:6px}
+
+@media (max-width:860px){
+  .specs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stages{grid-template-columns:1fr;border-top:2px solid var(--ink)}
+  .stage{border-right:0;border-bottom:1px solid var(--line);padding:12px 0}
+  .stage:last-child{border-bottom:0}
+  .section{grid-template-columns:1fr;gap:18px}
+  .sec-label{position:static;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px}
+  .sec-label .idx{margin:0}
+  .sec-label p{width:100%;margin-top:0}
+  .cards{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15px}
+  .hero h1{font-size:clamp(2.3rem,12vw,3.2rem)}
+  .booklist{grid-template-columns:1fr}
+  .step{grid-template-columns:34px minmax(0,1fr);gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="docline">
+      <span>DOC / FOUNDER–01</span>
+      <span>整理于 2026.10</span>
+      <span>中文 / English</span>
+      <span><b>公开资源版</b></span>
+    </div>
+    <h1>从实验室<br>到<span>量产</span></h1>
+    <p class="lede">给技术背景创业者的资源地图。创业课、融资课、找代工厂、小批量试产、科技成果转化，按你真正会遇到的顺序排好。不保证你成功，只帮你少交几十万学费。</p>
+    <dl class="specs">
+      <div><dt>适用对象</dt><dd>技术背景创业者 / 研究者</dd></div>
+      <div><dt>偏向</dt><dd>硬件与制造</dd></div>
+      <div><dt>阅读时间</dt><dd>25 分钟</dd></div>
+      <div><dt>资源数量</dt><dd>45+</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="route wrap" aria-label="阶段路线">
+  <div class="route-head">
+    <p>五个阶段，别跳级</p>
+    <a href="#plan">直接看 90 天清单 →</a>
+  </div>
+  <div class="stages">
+    <div class="stage">
+      <span class="n">S0</span>
+      <h2>判断</h2>
+      <p>分清“不想打工”和“想做产品”。</p>
+      <span class="t">2 周</span>
+    </div>
+    <div class="stage">
+      <span class="n">S1</span>
+      <h2>验证</h2>
+      <p>找到愿意付钱的人，而不是夸你技术好的人。</p>
+      <span class="t">1–3 个月</span>
+    </div>
+    <div class="stage">
+      <span class="n">S2</span>
+      <h2>样机</h2>
+      <p>能跑、能装配、能被工厂看懂。</p>
+      <span class="t">3–6 个月</span>
+    </div>
+    <div class="stage">
+      <span class="n">S3</span>
+      <h2>试产</h2>
+      <p>模具、认证、良率、现金流同时压过来。</p>
+      <span class="t">3–6 个月</span>
+    </div>
+    <div class="stage">
+      <span class="n">S4</span>
+      <h2>放大</h2>
+      <p>融资、渠道、量产，开始考组织能力。</p>
+      <span class="t">6 个月+</span>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="section" id="start">
+    <div class="sec-label">
+      <span class="idx">READ FIRST</span>
+      <h2>先读这一页</h2>
+      <p>三件事，决定你后面所有资料怎么用。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro"><strong>公开课能教你创业常识，教不会你制造常识。</strong>融资、股权、产品方法论有世界级的免费课；找代工厂、开模、认证、良率，几乎没有系统课程，只有零散指南和深圳的实地经验。所以这张图分成两半：前半段放心看课，后半段必须动手。</p>
+      <div class="note">
+        <b>先记住</b>
+        <p>1. 最贵的学费不是课程，是开模、备料和认证。先用几万块验证需求，再花几十万做量产。</p>
+        <p>2. 科研训练给你技术判断和耐力，也容易让你把“技术指标”当成“市场需求”。先让用户访谈纠正这一点。</p>
+        <p>3. 如果你来自高校或科研院所，有一个别人没有的入口：科技成果转化。很多科研背景的创业者死在权属没理清，而不是产品不行。</p>
+      </div>
+      <div class="warn">
+        <b>如果只做三件事</b>
+        <p>看完 YC Startup School；做 20 个真实用户访谈；带着 3D 文件和 BOM 去深圳跑 5 家工厂。其余都可以往后放。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="courses">
+    <div class="sec-label">
+      <span class="idx">TRACK 01</span>
+      <h2>创业通识</h2>
+      <p>先建立共同语言：idea、MVP、PMF、unit economics。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">这一层是公开资源最成熟的部分。把 YC 和斯坦福的课当主干，中文课当补充，两三周就能建立完整框架。不要陷入“收藏了等于学了”。</p>
+      <div class="cards">
+        <article class="card">
+          <span class="src">Y Combinator · 免费</span>
+          <h3>Startup School</h3>
+          <p>YC 的官方免费课，约 7 周、50 讲，覆盖 idea、联合创始人、MVP、发布、增长、融资。最像“创业本科”，适合作为第一站。</p>
+          <a class="link" href="https://www.startupschool.org/" target="_blank" rel="noopener">startupschool.org <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">Stanford CS183B · 20 讲</span>
+          <h3>How to Start a Startup</h3>
+          <p>2014 年 Sam Altman 在斯坦福开的课，Peter Thiel、Paul Graham、Brian Chesky 等人各讲一讲。B 站有中文字幕全 20 集，YC Library 有官方版本。</p>
+          <a class="link" href="https://www.bilibili.com/video/BV1c84y1R7DU/" target="_blank" rel="noopener">B 站中字 <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">MIT OpenCourseWare · 免费</span>
+          <h3>15.390 New Enterprises</h3>
+          <p>MIT 斯隆的经典创业课，有讲义、作业和视频。配套的 60 多门创业课都在 OCW 的 Entrepreneurship 合集里，适合系统补商业基础。</p>
+          <a class="link" href="https://ocw.mit.edu/collections/entrepreneurship/" target="_blank" rel="noopener">OCW 合集 <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">清华 · 学堂在线</span>
+          <h3>创办新企业</h3>
+          <p>中文语境下最完整的一门，清华经管开设，覆盖机会识别、团队、商业模式、融资。免费旁听，适合对照中国案例。</p>
+          <a class="link" href="https://www.xuetangx.com/course/THU67011000860/31376092" target="_blank" rel="noopener">学堂在线 <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">中文 MOOC · 免费旁听</span>
+          <h3>中国大学MOOC / 国家智慧教育平台</h3>
+          <p>“创新创业”类课程上百门，质量参差。优先选清华、浙大、上交等校的课，或者直接搜“精益创业”“商业模式”。</p>
+          <a class="link" href="https://www.icourse163.org/" target="_blank" rel="noopener">icourse163.org <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">方法论 · 免费文章</span>
+          <h3>Paul Graham / Steve Blank</h3>
+          <p>PG 的短文适合反复读，尤其是“Do Things That Don't Scale”和“How to Get Startup Ideas”。Steve Blank 的客户开发理论是硬件创业做需求验证的底子。</p>
+          <a class="link" href="https://paulgraham.com/articles.html" target="_blank" rel="noopener">paulgraham.com <span>↗</span></a>
+        </article>
+      </div>
+      <div class="note">
+        <b>这些课的共同盲区</b>
+        <p>它们默认你是软件公司：边际成本接近零、库存为零、认证为零、售后为零。硬件公司的现金流、模具摊销、良率、退货和认证，是另一套账。所以第 3、4 节比第 1 节更重要。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="funding">
+    <div class="sec-label">
+      <span class="idx">TRACK 02</span>
+      <h2>融资</h2>
+      <p>先懂条款，再谈估值。别用对赌换估值。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">融资课的价值不是教你“怎么讲情怀”，而是让你听懂 term sheet、算清稀释、知道投资人为什么拒你。英文资源明显更系统，中文资源更贴近本地基金生态。</p>
+      <div class="cards">
+        <article class="card">
+          <span class="src">Techstars · 免费</span>
+          <h3>Venture Deals</h3>
+          <p>基于 Brad Feld 同名书的免费课，讲 term sheet、cap table、估值、优先清算权、董事会、谈判。每年开数期，按批次报名，内容可回看。</p>
+          <a class="link" href="https://venturedeals.techstars.com/" target="_blank" rel="noopener">venturedeals.techstars.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">YC Library · 免费</span>
+          <h3>Fundraising 专题</h3>
+          <p>YC 把融资拆成很具体的动作：怎么选投资人、seed round 怎么设计、SAFE 怎么用、pitch deck 每一页放什么。比大多数付费课直接。</p>
+          <a class="link" href="https://www.ycombinator.com/library" target="_blank" rel="noopener">ycombinator.com/library <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">书 · 条款字典</span>
+          <h3>《Venture Deals》</h3>
+          <p>Brad Feld 与 Jason Mendelson 著。把每个条款为什么存在、创始人该怎么谈讲透。中文版可搜《风险投资交易》。融资前至少读一遍条款章节。</p>
+          <a class="link" href="https://venturedeals.com/" target="_blank" rel="noopener">venturedeals.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">模板 · 免费</span>
+          <h3>Sequoia Business Plan</h3>
+          <p>红杉的 BP 模板，10 页左右：问题、解决方案、市场、产品、 traction、商业模式、竞争、团队、财务、融资需求。硬件项目再加一页 BOM 与量产计划。</p>
+          <a class="link" href="https://www.sequoiacap.com/article/writing-a-business-plan/" target="_blank" rel="noopener">sequoiacap.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">中国语境 · 认知</span>
+          <h3>人民币基金 vs 美元基金</h3>
+          <p>人民币基金看重落地、税收、返投和退出确定性；美元基金更看全球市场和团队天花板。政府引导基金常带返投要求。产业资本可能给订单，也可能战略锁定你。</p>
+          <a class="link" href="https://www.ycombinator.com/library" target="_blank" rel="noopener">先补基础概念 <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">非稀释资金 · 中国</span>
+          <h3>政府补贴与资质</h3>
+          <p>高新技术企业（所得税 15%）、科技型中小企业、专精特新、创新创业大赛奖金、人才计划、场地补贴。这些不是投资，但能显著拉长早期 runway。</p>
+          <a class="link" href="https://www.cxcyds.com/" target="_blank" rel="noopener">中国创新创业大赛 <span>↗</span></a>
+        </article>
+      </div>
+      <div class="warn">
+        <b>融资前先问自己</b>
+        <p>你缺的是钱，还是订单、良率、供应链关系？硬件公司拿到钱却交不出货，会比没融资死得更快。先用预售、众筹或小批量订单证明需求，再谈估值。</p>
+        <p>中国早期融资里对赌和回购条款很常见。签之前找懂行的律师，别把“个人连带”当形式。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="hardware">
+    <div class="sec-label">
+      <span class="idx">TRACK 03</span>
+      <h2>硬件与制造</h2>
+      <p>从原型到量产的公开资料，英文比中文系统。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">这是最少人系统讲、也最容易交学费的一段。下面几个 GitHub 清单和指南，基本覆盖了 DFM、BOM、认证、测试、小批量试产。先通读，再去工厂，你会听懂对方在说什么。</p>
+      <div class="cards">
+        <article class="card">
+          <span class="src">GitHub · 最对口</span>
+          <h3>awesome-hardware-production</h3>
+          <p>一份“把硬件做出来”的资源清单：DFM、元器件采购、BOM 模板、固件、认证、测试、深圳采购、拆解报告。做硬件的人应该从这份开始。</p>
+          <a class="link" href="https://github.com/anujdeshpande/awesome-hardware-production" target="_blank" rel="noopener">github.com/anujdeshpande <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">GitHub · 机械与嵌入式</span>
+          <h3>AwesomeHardware</h3>
+          <p>HardwareMafia 维护的清单，偏机械工程、嵌入式、结构设计和量产资源。和上一份互补，适合做实体产品的团队。</p>
+          <a class="link" href="https://github.com/HardwareMafia/AwesomeHardware" target="_blank" rel="noopener">github.com/HardwareMafia <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">书 · O'Reilly</span>
+          <h3>The Hardware Startup</h3>
+          <p>Renee DiResta 等人著。从 idea 验证、品牌、原型、制造、加速器、众筹、融资到法律，一本完整的硬件创业路线图，案例多且不粉饰。</p>
+          <a class="link" href="https://books.google.com/books?id=EI2rCQAAQBAJ" target="_blank" rel="noopener">Google Books <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">Seeed Studio · 白皮书</span>
+          <h3>Open Manufacturing Whitepaper</h3>
+          <p>深圳矽递的开放制造白皮书，讲小批量 DFM 评审流程、每种定制需要交什么文件、打样到量产的路径。中文团队写的一手经验。</p>
+          <a class="link" href="https://files.seeedstudio.com/fusion/Open_Manufacturing_Whitepaper.pdf" target="_blank" rel="noopener">PDF <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">美国能源部 · 免费</span>
+          <h3>Build4Scale Resource Library</h3>
+          <p>政府资助的制造训练资料：DFMEA 模板、COGS 计算器、“去工厂前要准备什么”检查表、试产清单。非常适合第一次做硬件的人逐项打勾。</p>
+          <a class="link" href="https://www.innovationworks.org/wp-content/uploads/2018/11/Build4Scale_-Resource-Library.pdf" target="_blank" rel="noopener">PDF <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">DOE / Greentown Labs</span>
+          <h3>Startups × Manufacturers</h3>
+          <p>按工艺拆解交接要求：PCB 要 BOM、Gerber、坐标文件；钣金要展开图；注塑要拔模角和壁厚。每种工厂该问什么问题，写得很具体。</p>
+          <a class="link" href="https://www.energy.gov/sites/default/files/2021-07/App_J_BestPractices-for-Training-Startups-to-work-with_Manufacturers.pdf" target="_blank" rel="noopener">PDF <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">TriMech · 指南</span>
+          <h3>Prototype to Production</h3>
+          <p>讲软模和硬模的成本与周期、BOM 审查、停产料替代、IP 保护。适合在开模前建立成本直觉。</p>
+          <a class="link" href="https://design.trimech.com/blog/how-to-take-your-hardware-product-from-prototype-to-production/" target="_blank" rel="noopener">design.trimech.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">mHUB · 指南</span>
+          <h3>How to Hire a Contract Manufacturer</h3>
+          <p>审厂问题清单：产能、MOQ、报价拆解、同类案例、国内 vs 海外、需要准备哪些图纸。拿去改一改就能当自己的 RFQ 模板。</p>
+          <a class="link" href="https://mhub.org/blog/how-to-hire-for-contract-manufacturing" target="_blank" rel="noopener">mhub.org <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">China Sourcing Agents</span>
+          <h3>Hardware Startup Manufacturing in China</h3>
+          <p>消费电子在中国的量产里程碑：DFM、模具、认证（FCC/CE/RoHS/UN38.3）、30/70 付款、试产、备选供应商，附成本和周期表。</p>
+          <a class="link" href="https://china-sourcing-agents.com/guides/hardware-startup-china-manufacturing/" target="_blank" rel="noopener">china-sourcing-agents.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">开源硬件 · 认证</span>
+          <h3>OSHWA / 开源硬件商业模型</h3>
+          <p>如果你打算开源设计，OSHWA 提供认证和合规指引；delftopenhardware 的清单里还有开源硬件商业模型的论文。开源不等于不收钱，但要先想清楚靠什么收。</p>
+          <a class="link" href="https://github.com/delftopenhardware/awesome-open-hardware" target="_blank" rel="noopener">awesome-open-hardware <span>↗</span></a>
+        </article>
+      </div>
+      <div class="note">
+        <b>中文资料怎么找</b>
+        <p>中文的硬件创业知识大量散在知乎、公众号、小红书和 B 站，系统性和时效性都不如上面这些英文指南，但更贴近深圳的实际报价和人情世故。搜索时用“打样”“开模”“小批量”“PCBA”“试产”“认证”这些词，别用“硬件创业”这种大词。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="factory">
+    <div class="sec-label">
+      <span class="idx">TRACK 04</span>
+      <h2>找代工厂</h2>
+      <p>从“有个想法”到“拿到 3 份报价”的完整动作。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">工厂不会因为你的学历就重视你。它只认三件事：订单量、付款条件、图纸是否专业。下面六步，按顺序做，能过滤掉大部分坑。</p>
+
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>先把需求写成一张纸</h3>
+            <p>目标年销量、零售价、目标 COGS、目标市场与认证、关键规格、尺寸重量、包装形态。没有这些，工厂只能给你一个“参考价”，报完也没法用。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>准备一份工厂看得懂的技术包</h3>
+            <ul>
+              <li>3D STEP 文件 + 2D 图纸，标关键尺寸、公差、表面处理</li>
+              <li>BOM：型号、封装、替代料、指定品牌或 AVL</li>
+              <li>PCB：Gerber、坐标文件、钢网文件、叠层说明</li>
+              <li>装配图或爆炸图、测试规范、包装 artwork、说明书</li>
+              <li>一张 DFM 检查表，提前标出你不确定的地方</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>按工艺选厂，不要只搜“代工厂”</h3>
+            <p>先拆清楚你要的是哪几类：PCBA/EMS（嘉立创、华秋、Seeed Fusion）、结构件（注塑、CNC、钣金、压铸）、组装厂、ODM。渠道用 1688 找工厂（筛“支持打样”）、产业带（深圳/东莞消费电子，宁波/台州模具，苏州/昆山精密）、同行推荐、行业展会。至少询 3 家。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>用十个问题审厂</h3>
+            <ul>
+              <li>做过同类产品吗？能给案例或客户吗？</li>
+              <li>24–48 小时内能给 DFM 反馈吗？</li>
+              <li>报价拆不拆材料、模具、加工、测试、包装？</li>
+              <li>MOQ 多少？小批量接不接？</li>
+              <li>模具、备料、生产分别多久？</li>
+              <li>良率怎么定义？不良怎么赔？</li>
+              <li>付款条件是什么？常见 30/70。</li>
+              <li>有没有 ISO9001、ISO13485、IATF16949？</li>
+              <li>关键件能不能指定品牌或自己供料？</li>
+              <li>有没有备选产线或第二供应商？</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>按 EVT → DVT → PVT → MP 推进</h3>
+            <p>结构件从 3D 打印、CNC/复模、软模或样品模，再到硬模。打样 2–3 轮是常态，打样单价远高于量产也正常。每一轮留问题清单，别口头改图。没有做 DFM 就开模，是最常见的烧钱方式。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>量产前把质量和现金流一起管</h3>
+            <p>首件确认（FAI）、产线跟线、AQL 抽检、老化测试、出货报告。关键料准备第二来源，预算和时间各留 10–30% 缓冲。认证提前 3–6 个月安排，CE/FCC/3C/UN38.3/RoHS 都有各自的周期。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>项目</th><th>量级参考</th><th>周期</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>3D 打印 / CNC 打样</td><td class="num">几百–几千元 / 轮</td><td class="num">1–2 周</td></tr>
+            <tr><td>软模 / 复模 50–200 件</td><td class="num">几千–几万元</td><td class="num">2–4 周</td></tr>
+            <tr><td>注塑硬模</td><td class="num">几万–几十万元</td><td class="num">4–8 周</td></tr>
+            <tr><td>CE / FCC 认证</td><td class="num">几千–几万元</td><td class="num">4–8 周</td></tr>
+            <tr><td>小批量 300 台（含料、组装、测试）</td><td class="num">几十万元</td><td class="num">2–3 个月</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:8px">产品差异极大，以上只用于建立量级直觉，不作为报价依据。</p>
+
+      <div class="warn">
+        <b>最常见的七个坑</b>
+        <p>只选最低价；把打样单发给量产大厂；没签 NDA 就发全套图纸；没做 DFM 就开模；把“样品 OK”当成“量产 OK”；忽略包装、说明书、认证和物流；没有备选供应商。</p>
+      </div>
+
+      <div class="note">
+        <b>去哪找产业带</b>
+        <p>深圳/东莞：消费电子、PCBA、模具、组装。宁波/台州：模具、注塑、小家电。苏州/昆山：精密加工、电子。佛山：家电。找厂之前先查产业带，比在 1688 上盲搜效率高得多。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="phd">
+    <div class="sec-label">
+      <span class="idx">TRACK 05</span>
+      <h2>科研背景专属</h2>
+      <p>科技成果转化、职务发明、离岗创业。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">这部分内容，YC 的课不会讲，但它决定你能不能合法地把实验室成果带出来。各校差异很大，下面只给通用框架，具体以你所在学校的《科技成果转化管理办法》为准。</p>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>先确认成果归谁</h3>
+            <p>读博期间用学校资源、经费、设备完成的成果，通常属于职务发明，权属归学校。创业前先做成果披露，查清学校的赋权比例、审批流程和收益分配。不要先注册公司再补手续。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>走完转化流程</h3>
+            <p>典型路径：成果披露 → 资产评估 → 协议定价或挂牌/拍卖 → 校内公示（不少于 15 日）→ 学校审批 → 作价入股、许可或转让。部分高校已试点“先赋权、后作价入股”，团队可以先拿到 70%–90% 的所有权。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>算清奖励与税</h3>
+            <p>《促进科技成果转化法》要求：转让/许可净收入、作价投资形成的股份，提取不低于 50% 奖励完成人。个人以技术成果投资入股，按财税〔2016〕101 号可申请递延纳税，但需要主动向税务机关备案，不会自动享受。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>处理身份问题</h3>
+            <p>离岗创业通常可保留 3 年人事关系，兼职需要审批。各校和各地政策不同。别用学校设备、经费、学生给公司干活；论文发表和专利申请的顺序也要提前排好，先申请专利再投稿。</p>
+          </div>
+        </div>
+      </div>
+      <div class="warn">
+        <b>两个高频死法</b>
+        <p>1. 成果权属没理清就注册公司，融资尽调时被卡，或者被学校追认股份。</p>
+        <p>2. 把论文指标当产品指标，做出只有评审专家喜欢、客户不愿付钱的东西。</p>
+      </div>
+      <div class="note">
+        <b>政策原文与入口</b>
+        <p><a href="https://www.gov.cn/gongbao/content/2017/content_5191706.htm" target="_blank" rel="noopener">教育部、科技部关于加强高等学校科技成果转移转化工作的若干意见</a>。另有《促进科技成果转化法》及国务院实施规定；各校科研院/技术转移中心官网有本校细则。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="library">
+    <div class="sec-label">
+      <span class="idx">TRACK 06</span>
+      <h2>书、播客、社区</h2>
+      <p>课程之外，建立长期的输入。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">不用全读。挑三本和你当前阶段最相关的，读完就去做。播客适合通勤和跑工厂路上听。</p>
+      <h3 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">书单</h3>
+      <ul class="booklist">
+        <li><b>《精益创业》</b><span>Eric Ries。MVP、验证学习、转向。创业通识第一本。</span></li>
+        <li><b>《四步创业法》</b><span>Steve Blank。客户开发，硬件做需求验证尤其有用。</span></li>
+        <li><b>《从0到1》</b><span>Peter Thiel。小市场、垄断、逆向问题。薄，但值得读两遍。</span></li>
+        <li><b>《创业维艰》</b><span>Ben Horowitz。CEO 的脏活：裁员、降级、现金流断裂。</span></li>
+        <li><b>《跨越鸿沟》</b><span>Geoffrey Moore。从早期尝鲜者到主流市场，硬件创业的经典死因。</span></li>
+        <li><b>《创业者的纪律》</b><span>Bill Aulet。MIT 的 24 步法，把创业拆成可执行动作。</span></li>
+        <li><b>《The Hardware Startup》</b><span>Renee DiResta 等。硬件全流程，从原型到众筹到法律。</span></li>
+        <li><b>《Venture Deals》</b><span>Brad Feld。融资条款字典，谈 term sheet 前必读。</span></li>
+        <li><b>《创投42章经》</b><span>曲凯。中国创投语境下的融资、单位经济、增长。</span></li>
+        <li><b>《小米创业思考》</b><span>雷军。供应链、性价比、爆品策略，中文制造语境。</span></li>
+      </ul>
+
+      <h3 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 14px">播客</h3>
+      <div class="tags">
+        <span class="tag">创业内幕 Startup Insider</span>
+        <span class="tag">硅谷101</span>
+        <span class="tag">42章经</span>
+        <span class="tag">张小珺商业访谈录</span>
+        <span class="tag">晚点聊</span>
+        <span class="tag">The Lightcone (YC)</span>
+        <span class="tag">Acquired</span>
+        <span class="tag">Lenny's Podcast</span>
+      </div>
+
+      <h3 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 14px">社区与线下</h3>
+      <div class="cards" style="margin-top:0">
+        <article class="card">
+          <span class="src">深圳 · 硬件训练营</span>
+          <h3>深圳科创学院 / XbotPark</h3>
+          <p>李泽湘体系，走出了大疆、云鲸、正浩、海柔。每年有冬令营、夏令营和极客营，免学费，做 AI 硬件、机器人方向。适合还没注册公司的技术创业者去试水。</p>
+          <a class="link" href="https://www.innoxsz.com/" target="_blank" rel="noopener">innoxsz.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">全球 · 硬件加速器</span>
+          <h3>HAX (SOSV)</h3>
+          <p>在深圳运营多年的硬件加速器，投早期团队，提供供应链和量产支持。条款和批次以官网为准，适合已经有样机的团队。</p>
+          <a class="link" href="https://hax.co/" target="_blank" rel="noopener">hax.co <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">社区 · 英文</span>
+          <h3>Hacker News / r/hardware</h3>
+          <p>看别人怎么翻车，比看成功学有用。搜 “hardware startup”, “DFM”, “contract manufacturer” 的旧帖，信息密度很高。</p>
+          <a class="link" href="https://news.ycombinator.com/" target="_blank" rel="noopener">news.ycombinator.com <span>↗</span></a>
+        </article>
+        <article class="card">
+          <span class="src">社区 · 中文</span>
+          <h3>V2EX / 知乎 / 小红书</h3>
+          <p>V2EX 有硬件和创业节点；知乎适合搜具体工艺问题；小红书上有大量深圳硬件创业者的实地记录，碎片但真实。</p>
+          <a class="link" href="https://www.v2ex.com/" target="_blank" rel="noopener">v2ex.com <span>↗</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="plan">
+    <div class="sec-label">
+      <span class="idx">TRACK 07</span>
+      <h2>90 天清单</h2>
+      <p>勾选会保存在你自己的浏览器里。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">按周执行，不要按“读完所有资料”执行。90 天后你要得到的不是知识，而是一个决定：继续、换方向，还是先回去工作。</p>
+
+      <div class="checklist" id="checklist">
+        <div class="check-group">第 1–2 周 · 建立框架</div>
+        <label class="check"><input type="checkbox" id="c1"><span>完成 YC Startup School 前四个模块</span></label>
+        <label class="check"><input type="checkbox" id="c2"><span>看 CS183B 第 1、3、4、5 讲</span></label>
+        <label class="check"><input type="checkbox" id="c3"><span>写一页纸：什么问题、给谁、为什么是你</span></label>
+        <label class="check"><input type="checkbox" id="c4"><span>列出 10 个你认为会付钱的用户</span></label>
+
+        <div class="check-group">第 3–4 周 · 验证需求</div>
+        <label class="check"><input type="checkbox" id="c5"><span>完成 20 个用户访谈，问“现在怎么解决、花了多少钱”</span></label>
+        <label class="check"><input type="checkbox" id="c6"><span>估算目标售价、BOM 成本、毛利率</span></label>
+        <label class="check"><input type="checkbox" id="c7"><span>写出最可能失败的三个假设，并设计验证方式</span></label>
+        <label class="check"><input type="checkbox" id="c8"><span>做一次 go / no-go 决定</span></label>
+
+        <div class="check-group">第 5–8 周 · 做出样机</div>
+        <label class="check"><input type="checkbox" id="c9"><span>做出第一个能演示核心功能的手工原型</span></label>
+        <label class="check"><input type="checkbox" id="c10"><span>读完 The Hardware Startup 的制造与融资章节</span></label>
+        <label class="check"><input type="checkbox" id="c11"><span>通读 awesome-hardware-production，列出你缺的文件</span></label>
+        <label class="check"><input type="checkbox" id="c12"><span>整理技术包：3D、2D、BOM、测试规范</span></label>
+
+        <div class="check-group">第 9–12 周 · 接触工厂</div>
+        <label class="check"><input type="checkbox" id="c13"><span>列出 20 家潜在工厂或供应商</span></label>
+        <label class="check"><input type="checkbox" id="c14"><span>去深圳/东莞 5–7 天，跑 5 家工厂</span></label>
+        <label class="check"><input type="checkbox" id="c15"><span>拿到 3 份 RFQ 报价和至少 1 份 DFM 反馈</span></label>
+        <label class="check"><input type="checkbox" id="c16"><span>算清楚到小批量 300 台需要多少钱、多久</span></label>
+        <label class="check"><input type="checkbox" id="c17"><span>参加一次硬件创业活动或训练营</span></label>
+        <label class="check"><input type="checkbox" id="c18"><span>决定：注册公司、找 co-founder，还是先回去上班</span></label>
+      </div>
+
+      <div class="progress">
+        <span>完成进度</span>
+        <b id="progress">0 / 18</b>
+      </div>
+
+      <div class="note">
+        <b>如果只能做一件事</b>
+        <p>带着你的 3D 文件和 BOM，去深圳待一周，找 3 家工厂聊。你会在一周内学到课程里三个月学不到的东西：报价逻辑、工艺限制、交期、以及你的设计到底有多难做。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>资料核对于 2026 年 10 月。课程批次、训练营招生、补贴政策都会变，报名或签约前以官网和主管部门文件为准。</p>
+    <p>这是一份学习地图，不构成法律、税务或投资建议。涉及股权、职务发明、技术入股时，请找当地律师和税务师。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var KEY = 'phd-founder-checklist-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input[type=checkbox]'));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+
+  function updateProgress(){
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    var el = document.getElementById('progress');
+    if (el) el.textContent = done + ' / ' + boxes.length;
+  }
+
+  boxes.forEach(function(b){
+    if (saved[b.id]) b.checked = true;
+    b.addEventListener('change', function(){
+      saved[b.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      updateProgress();
+    });
+  });
+  updateProgress();
+})();
+</script>
