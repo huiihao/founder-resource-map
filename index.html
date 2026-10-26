@@ -158,6 +158,7 @@ main{padding-block:clamp(40px,6vw,72px)}
 .sec-body{min-width:0}
 .sec-intro{font-size:1.02rem;line-height:1.95;max-width:44em;margin-bottom:28px}
 .sec-intro strong{font-weight:700}
+.subhead{font-family:"Noto Sans SC",sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 14px;font-weight:500}
 
 /* ---------- 资料卡 ---------- */
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
@@ -263,7 +264,7 @@ footer p+p{margin-top:6px}
       <div><dt>适用对象</dt><dd>技术背景创业者 / 研究者</dd></div>
       <div><dt>偏向</dt><dd>软件 / 硬件 / 制造</dd></div>
       <div><dt>阅读时间</dt><dd>30 分钟</dd></div>
-      <div><dt>资源数量</dt><dd>55+</dd></div>
+      <div><dt>资源数量</dt><dd>60+</dd></div>
     </dl>
   </div>
 </header>
@@ -718,9 +719,151 @@ footer p+p{margin-top:6px}
     </div>
   </section>
 
-  <section class="section" id="library">
+  <section class="section" id="compliance">
     <div class="sec-label">
       <span class="idx">TRACK 07</span>
+      <h2>合规与开公司</h2>
+      <p>备案、许可证、营业执照，别混为一谈。</p>
+    </div>
+    <div class="sec-body">
+      <p class="sec-intro">网站能不能上线、能不能收费、要不要注册公司，是三件不同的事。ICP 备案解决“网站能不能在大陆合法上线”，营业执照解决“你能不能合法经营、收款、开票”，ICP/EDI 许可证解决“某些经营模式要不要额外许可”。要收费的网站，多数情况下都绕不开，但轻重取决于你卖什么。</p>
+
+      <div class="cards">
+        <article class="card">
+          <span class="src">上线前提</span>
+          <h3>ICP 备案</h3>
+          <p>非经营性网站备案，个人和企业都能办，官方免费，通常 1–3 周。备案号要放在网站底部。它只说明网站可以上线，不等于允许你收费。</p>
+        </article>
+        <article class="card">
+          <span class="src">经营许可</span>
+          <h3>ICP 经营许可证</h3>
+          <p>经营性互联网信息服务许可（B25），只有内资公司能办，个人和个体户不行。一般要求注册资本省内不低于 100 万元、3 名员工社保、经营范围含“增值电信业务”。</p>
+        </article>
+        <article class="card">
+          <span class="src">经营主体</span>
+          <h3>营业执照</h3>
+          <p>公司或个体工商户。在网上持续卖商品或服务，原则上都要办。《电子商务法》第 10 条有“零星小额”豁免，实践中按年交易额累计不超过 10 万元掌握，但不等于免税务和消费者保护。</p>
+        </article>
+        <article class="card">
+          <span class="src">上线后 30 日内</span>
+          <h3>公安联网备案</h3>
+          <p>ICP 备案完成后、网站开通 30 日内，在“全国互联网安全管理服务平台”办理。交互式网站可能还要面审或实地检查。</p>
+        </article>
+      </div>
+
+      <h3 class="subhead">你做什么，需要什么</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>业务形态</th><th>需要的资质</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>免费博客、展示站，无广告无收费</td><td>ICP 备案（个人可）</td></tr>
+            <tr><td>自营销售自己的实物商品或非信息类服务，网站/APP 无第三方入驻</td><td>ICP 备案 + 公安备案 + 营业执照（公司或个体户）。按 2025 年多地通信管理局口径，不需要 ICP/EDI 许可证</td></tr>
+            <tr><td>会员、付费内容、课程、SaaS 订阅、直接卖广告位</td><td>通常需要公司 + ICP 经营许可证 + ICP 备案</td></tr>
+            <tr><td>第三方商家入驻、抽佣平台</td><td>公司 + EDI 许可证（通常还要 ICP 许可证）+ ICP 备案</td></tr>
+            <tr><td>只在微信/抖音小程序、有赞、微店等平台卖</td><td>平台持证；你通常只需营业执照（按平台要求）。自建独立站则回到上面</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <b>三个关键判断</b>
+        <p>1. 有没有第三方以自己名义入驻卖东西？有 → EDI；没有 → 自营，通常不需要 EDI。</p>
+        <p>2. 是不是靠信息、内容、会员、广告收费？是 → ICP 经营许可证；只是卖自己的货 → 通常不需要。</p>
+        <p>3. 是不是在大陆服务器上跑？是 → ICP 备案是硬前提。放香港或海外服务器不要求 ICP 备案，但不等于没有合规义务；面向大陆用户经营仍受电商法、税法、广告法、个人信息保护法约束，支付、广告、应用商店也常要求备案。</p>
+      </div>
+
+      <h3 class="subhead">公司还是个体户</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>维度</th><th>个体工商户</th><th>有限公司</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>成本与速度</td><td>便宜、办得快</td><td>记账、社保、注册地址，成本更高</td></tr>
+            <tr><td>ICP / EDI 许可证</td><td>不能办</td><td>可以办</td></tr>
+            <tr><td>责任</td><td>无限责任</td><td>以出资为限</td></tr>
+            <tr><td>融资与签约</td><td>较难</td><td>能融资、招人、签大合同</td></tr>
+            <tr><td>适合</td><td>小规模自营卖货或卖内容</td><td>长期经营、可能融资</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subhead">推荐顺序</h3>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>先定商业模式</h3>
+            <p>卖货、卖内容、卖服务，还是做平台。不同答案对应完全不同的资质组合，别先注册公司再想。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>注册主体，写全经营范围</h3>
+            <p>公司或个体户。涉及许可的，经营范围里要包含“增值电信业务”或“第二类增值电信业务”，否则后续要变更。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>域名和服务器落在主体名下</h3>
+            <p>域名实名认证到公司或个体户名下，买大陆服务器。备案主体、域名持有人、营业执照三者要一致。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>做 ICP 备案</h3>
+            <p>通过阿里云、腾讯云等接入商提交，个人或企业都可以。备案号下来后放在网站底部，并链接到工信部备案系统。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>做公安联网备案</h3>
+            <p>网站开通 30 日内，在“全国互联网安全管理服务平台”提交。交互式网站可能要面审或实地检查。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>需要许可的，向省通信管理局申请</h3>
+            <p>ICP 或 EDI 许可证由公司申请，个人和个体户不行。准备注册资本、3 人社保、域名备案、等保等材料，各地要求有差异。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>接支付、开票、报税</h3>
+            <p>用营业执照申请微信/支付宝商户，签合同、开发票、按期申报。上线隐私政策、用户协议、退款和售后规则。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>放到你这个资源站上</b>
+        <p>只放广告或赞助：个人备案 + 广告联盟可以起步，但收入要申报；长期建议个体户或公司。直接卖广告位更接近经营性，建议按公司 + ICP 许可证准备。</p>
+        <p>付费会员、专栏、咨询：建议公司 + ICP 许可证；想先跑起来，可以用知识星球、小报童、面包多等平台，由平台持证，你作为创作者入驻。</p>
+        <p>卖资料包或实物：自营网站卖自己的货，营业执照 + ICP 备案即可；用有赞、微店更省事。</p>
+        <p>打赏二维码：不算正规经营，税务、退款、风控都有隐患，不建议长期。</p>
+      </div>
+
+      <div class="warn">
+        <b>最容易踩的坑</b>
+        <p>备案主体、域名持有人、营业执照、收款账户、发票抬头不一致，支付、许可、税务都会卡。</p>
+        <p>个人备案做公司业务：个人备案不得从事有偿服务，后续要变更或注销重备。</p>
+        <p>先收费再补备案：可能被责令整改、关站、罚款，支付和应用商店也会卡。</p>
+        <p>注册资本写太高：2024 年新公司法要求 5 年内实缴，压力大；写太低又达不到 ICP 许可证门槛。</p>
+        <p>以为海外服务器就不用管：大陆访问慢，且面向大陆经营仍有合规义务。</p>
+      </div>
+
+      <div class="note">
+        <b>官方入口与说明</b>
+        <p>办证前拨打 12381 或咨询属地通信管理局；官方办理不收费，别被“包过”忽悠。以下是通用规则，不是法律意见，各地执行有差异。</p>
+        <p><a href="https://gdca.miit.gov.cn/bsfw/bszn/jyxk/tzgg/art/2025/art_6bcbfa4f041247868c0de08e765b33e9.html" target="_blank" rel="noopener">广东省通信管理局 FAQ</a> · <a href="https://hubca.miit.gov.cn/zwgk/dxhhlwgl/art/2025/art_46268c23ed4f4a5191d9fc2f79dcf231.html" target="_blank" rel="noopener">湖北省通信管理局 FAQ</a> · <a href="https://policy.mofcom.gov.cn/claw/clawContent.shtml?id=102438" target="_blank" rel="noopener">《互联网信息服务管理办法》（2024 修订）</a> · <a href="https://amr.gd.gov.cn/dawenku/scjd/content/post_4238570.html" target="_blank" rel="noopener">广东省市场监管局：电子商务经营者登记问答</a> · <a href="https://ga.sz.gov.cn/ZT/HLWSYSQ/" target="_blank" rel="noopener">深圳市公安局：新办网站备案</a> · <a href="https://dxzhgl.miit.gov.cn" target="_blank" rel="noopener">工信部电信业务市场综合管理信息系统</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="library">
+    <div class="sec-label">
+      <span class="idx">TRACK 08</span>
       <h2>书、播客、社区</h2>
       <p>课程之外，建立长期的输入。</p>
     </div>
@@ -787,7 +930,7 @@ footer p+p{margin-top:6px}
 
   <section class="section" id="plan">
     <div class="sec-label">
-      <span class="idx">TRACK 08</span>
+      <span class="idx">TRACK 09</span>
       <h2>90 天清单</h2>
       <p>勾选会保存在你自己的浏览器里。</p>
     </div>
